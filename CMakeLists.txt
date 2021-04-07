@@ -1,26 +1,25 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(EZ_TEMPLATE
-VERSION 1.0.0
+project(EZ_HASH
+VERSION 0.1.0
 LANGUAGES C CXX)
 
-set(PACKAGE_NAME ez-template)
-set(TARGET_NAME template)
+set(PACKAGE_NAME ez-hash)
+set(TARGET_NAME hash)
+option(BUILD_TESTS "Build the test executables." TRUE)
 
 include(GNUInstallDirs)
 find_package(ez-cmake CONFIG REQUIRED)
 
-# Find deps
-#find_package(glm CONFIG REQUIRED)
-
 # Create main target.
-add_library(${TARGET_NAME} INTERFACE
-	# Add source files
-	#"src/IntersectFunctions.cpp"
+add_library(${TARGET_NAME} STATIC
+	"src/murmur.cpp"
+	"src/xorshift.cpp"
+	"src/splitmix.cpp"
 )
 
 # Add the include directory
-target_include_directories(${TARGET_NAME} INTERFACE 
+target_include_directories(${TARGET_NAME} PUBLIC 
 
 	# Build only include directories
 	"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
@@ -30,7 +29,7 @@ target_include_directories(${TARGET_NAME} INTERFACE
 )
 
 # Select the c++ version to use.
-target_compile_features(${TARGET_NAME} INTERFACE cxx_std_17)
+target_compile_features(${TARGET_NAME} PUBLIC cxx_std_17)
 
 # Just for internal compatibility, so that subprojects can use the namespaced version
 add_library("ez::${TARGET_NAME}" ALIAS "${TARGET_NAME}")
@@ -39,10 +38,6 @@ add_library("ez::${TARGET_NAME}" ALIAS "${TARGET_NAME}")
 if(${BUILD_TESTS})
 	add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests")
 endif()
-
-# Set the proper installation path
-set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_NAME})
-
 
 install(
 	DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
@@ -78,7 +73,4 @@ install_package(
 
 	#PRECONFIG "${CMAKE_CURRENT_SOURCE_DIR}/preconfig.cmake"
 	#POSTCONFIG "${CMAKE_CURRENT_SOURCE_DIR}/postconfig.cmake"
-
-	# Only add this option if the library is header only, or an interface library.
-	ARCH_INDEPENDENT
 )
