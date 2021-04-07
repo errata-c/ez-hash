@@ -1,3 +1,6 @@
 [submodule "submodules/pcg-cpp"]
 	path = submodules/pcg-cpp
 	url = https://github.com/imneme/pcg-cpp.git
+[submodule "pcg-cpp"]
+	branch = master
+	commit = ffd522e7188bef30a00c74dc7eb9de5faff90092
