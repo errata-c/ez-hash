@@ -7,7 +7,9 @@
 #include <cmath>
 #include <limits>
 
-using namespace ez::prng;
+#include <ez/hash/state.hpp>
+
+using namespace ez::hash;
 
 template<typename T>
 bool approxEq(T a, T b, T delta) {

@@ -4,39 +4,45 @@ project(EZ_HASH
 VERSION 0.1.0
 LANGUAGES C CXX)
 
-set(PACKAGE_NAME ez-hash)
-set(TARGET_NAME hash)
-option(BUILD_TESTS "Build the test executables." TRUE)
-
 include(GNUInstallDirs)
 find_package(ez-cmake CONFIG REQUIRED)
 
-# Create main target.
-add_library(${TARGET_NAME} STATIC
+set(PACKAGE_NAME ez-hash)
+option(BUILD_TESTS "Build the test executables." ON)
+option(SEPARATE_DIRECTORY "Install the package into its own directory" ON)
+
+find_package(xxHash CONFIG REQUIRED)
+
+file(COPY 
+	"submodules/pcg-cpp/include/pcg_random.hpp" 
+	"submodules/pcg-cpp/include/pcg_extras.hpp"
+	"submodules/pcg-cpp/include/pcg_uint128.hpp"
+	
+	DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/include/ez/hash/pcg"
+)
+
+add_library(hash STATIC
 	"src/murmur.cpp"
 	"src/xorshift.cpp"
 	"src/splitmix.cpp"
+	"src/xxhash.cpp"
 )
-
-# Add the include directory
-target_include_directories(${TARGET_NAME} PUBLIC 
-
-	# Build only include directories
+target_include_directories(hash PUBLIC 
 	"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-
-	# Install include directories
 	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
+target_link_libraries(hash PUBLIC xxHash::xxhash)
+target_compile_features(hash PUBLIC cxx_std_17)
 
-# Select the c++ version to use.
-target_compile_features(${TARGET_NAME} PUBLIC cxx_std_17)
-
-# Just for internal compatibility, so that subprojects can use the namespaced version
-add_library("ez::${TARGET_NAME}" ALIAS "${TARGET_NAME}")
+add_library("ez::hash" ALIAS "hash")
 
 # Build the tests once the option is enabled.
 if(${BUILD_TESTS})
 	add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests")
+endif()
+
+if(SEPARATE_DIRECTORY) 
+	set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/ez-hash)
 endif()
 
 install(
@@ -45,9 +51,8 @@ install(
 	FILES_MATCHING
 	PATTERN "*.h" PATTERN "*.hpp"
 )
-
-install(TARGETS ${TARGET_NAME}
-	EXPORT ${TARGET_NAME}-targets
+install(TARGETS hash
+	EXPORT hash-targets
 	RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}/$<CONFIG>"
 	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}/$<CONFIG>"
 	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/$<CONFIG>"
@@ -55,22 +60,14 @@ install(TARGETS ${TARGET_NAME}
 
 install_package(
 	NAME "${PACKAGE_NAME}"
-	EXPORT "${TARGET_NAME}-targets"
+	EXPORT "hash-targets"
 	VERSION "${CMAKE_PROJECT_VERSION}"
 
 	NAMESPACE "ez::"
 
-	# Version compatiblity
 	COMPATIBILITY "SameMajorVersion"
+	DESTINATION DEFAULT
 
-	# Relative install location of the package config files.
-	DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/${PACKAGE_NAME}"
-
-	# Pre and Post configuration files for the packages. Files are run as scripts when the package is found.
-	# Most dependencies must be found in the preconfig file, except non-target dependencies
-	# Non-target dependencies should probably be found in the post config, and added onto the imported target manually.
-	# Non-target dependencies kinda suck, avoid them if you can.
-
-	#PRECONFIG "${CMAKE_CURRENT_SOURCE_DIR}/preconfig.cmake"
+	PRECONFIG "cmake/preconfig.cmake"
 	#POSTCONFIG "${CMAKE_CURRENT_SOURCE_DIR}/postconfig.cmake"
 )

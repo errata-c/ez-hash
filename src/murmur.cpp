@@ -3,13 +3,13 @@
 #include <limits>
 #include <cassert>
 
-namespace ez::prng {
+namespace ez::hash {
 	Murmur32::Murmur32() noexcept
 		: state(0)
 	{}
-	Murmur32::Murmur32(uint32_t s) noexcept
-		: state(s)
-	{}
+	Murmur32::Murmur32(uint32_t s) noexcept {
+		state.words = { s };
+	}
 
 	uint32_t Murmur32::operator()(std::string_view str)  noexcept {
 		return advance(str.data(), static_cast<std::intptr_t>(str.size()));
@@ -24,7 +24,7 @@ namespace ez::prng {
 	uint32_t Murmur32::advance(const void* key, std::intptr_t len) noexcept {
 		uint32_t result = eval(key, len);
 
-		state = result;
+		state.value() = result;
 		return result;
 	}
 
@@ -33,7 +33,7 @@ namespace ez::prng {
 	}
 	uint32_t Murmur32::eval(const void* key, std::intptr_t len) const  noexcept {
 		/* 32-Bit MurmurHash3: https://code.google.com/p/smhasher/wiki/MurmurHash3 */
-		uint32_t h1 = state;
+		uint32_t h1 = state.value();
 		uint32_t k1;
 		const std::uint8_t* data = reinterpret_cast<const std::uint8_t*>(key);
 		const std::uint8_t* keyptr = data;

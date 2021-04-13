@@ -2,7 +2,19 @@
 #include <cinttypes>
 #include <cassert>
 
-namespace ez::prng {
+namespace ez::hash {
+	/*
+	template<typename T, typename = int>
+	struct has_state {
+		static constexpr bool value = false;
+	};
+	template<typename T>
+	struct has_state<T, decltype(std::declval<T>().state, std::declval<T>().state.size(), 0)> {
+		using state_t = decltype(std::declval<T>().state);
+		static constexpr bool value = std::is_same_v<typename state_t::value_type, uint32_t>;
+	};
+	*/
+
 	inline uint8_t rotl8(uint8_t val, uint32_t amount) {
 		assert(amount < 8);
 		return static_cast<uint8_t>(val << amount) | (val >> (((~amount) + 1) & 7u));

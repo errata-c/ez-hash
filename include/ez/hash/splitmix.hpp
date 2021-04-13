@@ -1,9 +1,16 @@
 #pragma once
 #include <cinttypes>
+#include <cstddef>
+#include <array>
 
-namespace ez::prng {
+#include "state.hpp"
+
+namespace ez::hash {
 	class SplitMix64 {
 	public:
+		using state_t = State<2, uint64_t>;
+		using value_type = uint64_t;
+
 		~SplitMix64() noexcept = default;
 		SplitMix64(const SplitMix64&)  noexcept = default;
 		SplitMix64& operator=(const SplitMix64&) noexcept = default;
@@ -17,6 +24,6 @@ namespace ez::prng {
 
 		uint64_t eval() const noexcept;
 
-		uint64_t state;
+		state_t state;
 	};
 }

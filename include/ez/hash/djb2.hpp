@@ -2,7 +2,7 @@
 #include <cinttypes>
 #include <type_traits>
 
-namespace ez::prng {
+namespace ez::hash {
 	namespace intern {
 		/*
 		djb2

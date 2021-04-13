@@ -1,11 +1,14 @@
 #pragma once
 #include <string_view>
 #include <cinttypes>
+#include "state.hpp"
 
-
-namespace ez::prng {
+namespace ez::hash {
 	class Murmur32 {
 	public:
+		using state_t = State<1>;
+		using value_type = uint64_t;
+
 		~Murmur32() = default;
 		Murmur32(const Murmur32&) = default;
 		Murmur32& operator=(const Murmur32&) = default;
@@ -22,6 +25,6 @@ namespace ez::prng {
 		uint32_t eval(std::string_view text) const noexcept;
 		uint32_t eval(const void* key, std::intptr_t len) const noexcept;
 
-		uint32_t state;
+		state_t state;
 	};
 }
