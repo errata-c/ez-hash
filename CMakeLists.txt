@@ -1,15 +1,17 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(EZ_HASH
-VERSION 0.1.0
+VERSION 0.2.1
 LANGUAGES C CXX)
 
-include(GNUInstallDirs)
-find_package(ez-cmake CONFIG REQUIRED)
-
-set(PACKAGE_NAME ez-hash)
 option(BUILD_TESTS "Build the test executables." ON)
 option(SEPARATE_DIRECTORY "Install the package into its own directory" ON)
+
+include(GNUInstallDirs)
+include("cmake/ez-cmake/install_package.cmake")
+
+set(PACKAGE_NAME ez-hash)
+
 
 find_package(xxHash CONFIG REQUIRED)
 
@@ -37,8 +39,8 @@ target_compile_features(hash PUBLIC cxx_std_17)
 add_library("ez::hash" ALIAS "hash")
 
 # Build the tests once the option is enabled.
-if(${BUILD_TESTS})
-	add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests")
+if(BUILD_TESTS)
+	add_subdirectory("tests")
 endif()
 
 if(SEPARATE_DIRECTORY) 
@@ -69,5 +71,4 @@ install_package(
 	DESTINATION DEFAULT
 
 	PRECONFIG "cmake/preconfig.cmake"
-	#POSTCONFIG "${CMAKE_CURRENT_SOURCE_DIR}/postconfig.cmake"
 )
