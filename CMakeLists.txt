@@ -5,7 +5,7 @@ VERSION 0.2.1
 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
-include("cmake/ez-cmake/install-package.cmake")
+include("cmake/ez-cmake/install_package.cmake")
 
 option(BUILD_TESTS "Build the test executables" ON)
 option(SEPARATE_DIRECTORY "Install the package into its own directory" ON)
@@ -53,15 +53,15 @@ install(
 	PATTERN "*.h" PATTERN "*.hpp"
 )
 install(TARGETS hash
-	EXPORT hash-targets
+	EXPORT "ez-hash-export"
 	RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}/$<CONFIG>"
 	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}/$<CONFIG>"
 	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/$<CONFIG>"
 )
 
 install_package(
-	NAME "${PACKAGE_NAME}"
-	EXPORT "hash-targets"
+	NAME "ez-hash"
+	EXPORT "ez-hash-export"
 	VERSION "${CMAKE_PROJECT_VERSION}"
 
 	NAMESPACE "ez::"
