@@ -4,13 +4,12 @@ project(EZ_HASH
 VERSION 0.2.1
 LANGUAGES C CXX)
 
-option(BUILD_TESTS "Build the test executables." ON)
-option(SEPARATE_DIRECTORY "Install the package into its own directory" ON)
-
 include(GNUInstallDirs)
-include("cmake/ez-cmake/install_package.cmake")
+include("cmake/ez-cmake/install-package.cmake")
 
-set(PACKAGE_NAME ez-hash)
+option(BUILD_TESTS "Build the test executables" ON)
+option(SEPARATE_DIRECTORY "Install the package into its own directory" ON)
+set(CONFIG_DIR "${CMAKE_INSTALL_DATAROOTDIR}/ez-hash" CACHE STRING "The relative directory to install package config files.")
 
 
 find_package(xxHash CONFIG REQUIRED)
@@ -68,7 +67,7 @@ install_package(
 	NAMESPACE "ez::"
 
 	COMPATIBILITY "SameMajorVersion"
-	DESTINATION DEFAULT
+	DESTINATION "${CONFIG_DIR}"
 
 	PRECONFIG "cmake/preconfig.cmake"
 )
