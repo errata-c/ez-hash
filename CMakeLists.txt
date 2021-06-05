@@ -5,7 +5,14 @@ VERSION 0.2.1
 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
-include("cmake/ez-cmake/install_package.cmake")
+include(FetchContent)
+
+FetchContent_Declare(
+	ez-cmake
+	GIT_REPOSITORY "https://github.com/errata-c/ez-cmake.git"
+	GIT_TAG "8b8afed28ed3e2dd9534dc5c5968ef21925910d5"
+)
+FetchContent_MakeAvailable(ez-cmake)
 
 option(BUILD_TESTS "Build the test executables" ON)
 option(SEPARATE_DIRECTORY "Install the package into its own directory" ON)
