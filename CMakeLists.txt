@@ -12,7 +12,13 @@ FetchContent_Declare(
 	GIT_REPOSITORY "https://github.com/errata-c/ez-cmake.git"
 	GIT_TAG "8b8afed28ed3e2dd9534dc5c5968ef21925910d5"
 )
-FetchContent_MakeAvailable(ez-cmake)
+FetchContent_Declare(
+	pcg-cpp
+	GIT_REPOSITORY "https://github.com/imneme/pcg-cpp.git"
+	GIT_TAG "ffd522e7188bef30a00c74dc7eb9de5faff90092"
+)
+
+FetchContent_MakeAvailable(ez-cmake pcg-cpp)
 
 option(BUILD_TESTS "Build the test executables" ON)
 option(SEPARATE_DIRECTORY "Install the package into its own directory" ON)
@@ -22,9 +28,9 @@ set(CONFIG_DIR "${CMAKE_INSTALL_DATAROOTDIR}/ez-hash" CACHE STRING "The relative
 find_package(xxHash CONFIG REQUIRED)
 
 file(COPY 
-	"submodules/pcg-cpp/include/pcg_random.hpp" 
-	"submodules/pcg-cpp/include/pcg_extras.hpp"
-	"submodules/pcg-cpp/include/pcg_uint128.hpp"
+	"${pcg-cpp_SOURCE_DIR}/include/pcg_random.hpp" 
+	"${pcg-cpp_SOURCE_DIR}/include/pcg_extras.hpp"
+	"${pcg-cpp_SOURCE_DIR}/include/pcg_uint128.hpp"
 	
 	DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/include/ez/hash/pcg"
 )
