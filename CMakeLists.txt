@@ -10,7 +10,7 @@ include(FetchContent)
 FetchContent_Declare(
 	ez-cmake
 	GIT_REPOSITORY "https://github.com/errata-c/ez-cmake.git"
-	GIT_TAG "8b8afed28ed3e2dd9534dc5c5968ef21925910d5"
+	GIT_TAG "c174cbd947278d4dd8e2f7d7f3c3499cd0b7f5ad"
 )
 FetchContent_Declare(
 	pcg-cpp
