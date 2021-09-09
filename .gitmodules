@@ -1,6 +1,0 @@
-[submodule "pcg-cpp"]
-	branch = master
-	commit = ffd522e7188bef30a00c74dc7eb9de5faff90092
-[submodule "cmake/ez-cmake"]
-	path = cmake/ez-cmake
-	url = git@github.com:errata-c/ez-cmake.git

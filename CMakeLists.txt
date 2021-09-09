@@ -1,24 +1,18 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(EZ_HASH
-VERSION 0.2.1
-LANGUAGES C CXX)
-
-include(GNUInstallDirs)
-include(FetchContent)
-
-FetchContent_Declare(
-	ez-cmake
-	GIT_REPOSITORY "https://github.com/errata-c/ez-cmake.git"
-	GIT_TAG "c174cbd947278d4dd8e2f7d7f3c3499cd0b7f5ad"
+	VERSION 0.2.1
+	LANGUAGES C CXX
 )
+
+include(cmake/defaults.cmake)
+
 FetchContent_Declare(
 	pcg-cpp
 	GIT_REPOSITORY "https://github.com/imneme/pcg-cpp.git"
 	GIT_TAG "ffd522e7188bef30a00c74dc7eb9de5faff90092"
 )
-
-FetchContent_MakeAvailable(ez-cmake pcg-cpp)
+FetchContent_MakeAvailable(pcg-cpp)
 
 option(BUILD_TESTS "Build the test executables" ON)
 option(SEPARATE_DIRECTORY "Install the package into its own directory" ON)
